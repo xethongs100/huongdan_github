@@ -1,0 +1,316 @@
+#include "MyString.h"
+#include<iostream>
+using namespace std;
+
+
+MyString::MyString()
+{
+	this->len = 1;
+	this->str = new char[this->len];
+}
+
+MyString::MyString(int size, char* t)
+{
+	this->len = size;
+	this->str = new char[this->len];
+	for (int i = 0; i < this->len; i++)
+	{
+		this->str[i] = t[i];
+	}
+	this->str[this->len] = '\0';
+}
+
+MyString::MyString(MyString& x)
+{
+	this->str = x.str;
+	this->len = x.len;
+}
+
+MyString::~MyString()
+{
+	delete[]this->str;
+}
+
+istream& operator>>(istream& in, MyString x)
+{
+	in >> x.str;
+	return in;
+}
+
+ostream& operator<<(ostream& out, MyString x)
+{
+	out << x.str;
+	return out;
+}
+
+MyString MyString::operator=(MyString& x)
+{
+	this->len = x.len;
+	this->str = x.str;
+	return *this;
+}
+
+MyString MyString::operator+(MyString x)
+{
+	int dem = 0;
+	MyString temp;
+	temp.len = this->len + x.len;
+	temp.str = new char[temp.len];
+	for (int i = 0; i < temp.len; i++)
+	{
+		if (i < this->len)
+		{
+			temp.str[i] = this->str[i];
+		}
+		else
+		{
+			temp.str[i] = x.str[dem];
+			dem++;
+		}
+	}
+	temp.str[temp.len] = '\0';
+	return temp;
+	delete[]temp.str;
+}
+
+MyString MyString::operator+=(MyString x)
+{
+	int dem = 0;
+	char* t = new char[this->len];
+	for (int i = 0; i < this->len; i++)
+	{
+		t[i] = this->str[i];
+	}
+	int n = this->len + x.len;
+	this->str = new char[n];
+	for (int i = 0; i < n; i++)
+	{
+		if (i > (x.len - 1))
+		{
+			this->str[i] = x.str[dem];
+			dem++;
+		}
+		else
+		{
+			this->str[i] = t[i];
+		}
+	}
+	this->len = n;
+	this->str[n] = '\0';
+	return *this;
+}
+
+void MyString::operator==(MyString x)
+{
+	int dem1 = -1;
+	int dem2 = -1;
+	for (int i = 0; i < x.len; i++)
+	{
+		if (this->str[i] == x.str[i])
+			dem1++;
+		else
+			dem2++;
+	}
+	if (dem1 == x.len - 1)
+		cout << "True!";
+	else if (dem2!=x.len-1)
+		cout << "False!";
+}
+
+void MyString::operator<(MyString x)
+{
+	if (this->len < x.len)
+		cout << "True";
+	else
+		cout << "False";
+}
+
+void MyString::operator>(MyString x)
+{
+	if (this->len > x.len)
+		cout << "True";
+	else
+		cout << "False";
+}
+
+void MyString::operator>=(MyString x)
+{
+	if (this->len >= x.len)
+		cout << "True";
+	else
+		cout << "False";
+}
+
+void MyString::operator<=(MyString x)
+{
+	if (this->len <= x.len)
+		cout << "True";
+	else
+		cout << "False";
+}
+
+void MyString::operator!=(MyString x)
+{
+	int dem1 = -1;
+	int dem2 = -1;
+	for (int i = 0; i < x.len; i++)
+	{
+		if (this->str[i] != x.str[i])
+			dem1++;
+		else
+			dem2++;
+	}
+	if (dem1 != x.len - 1)
+		cout << "True";
+	if (dem2 == x.len - 1)
+		cout << "False";
+}
+
+bool MyString::empty()
+{
+	int dem = 0;
+	int dem1 = 0;
+	for (int i = 0; i < this->len; i++)
+	{
+		if (this->str[i] != NULL)
+			dem1 = 0;
+		else
+			dem++;
+	}
+	this->str[this->len] = '\0';
+	if (dem == (this->len - 1))
+		return true;
+	if (dem1 == (this->len - 1))
+		return false;
+}
+
+char* MyString::insert(int vitri,char* t)
+{
+	int dem1 = 0;
+	int dem2 = 0;
+	int size = strlen(this->str) + strlen(t);
+	char* temp = new char[size];
+	for (int i = 0; i < size; i++)
+	{
+		if (i < vitri)
+		{
+			temp[i] = this->str[dem1];
+			dem1++;
+			demkitu2++;
+		}
+		else if (i >= vitri&&i <= (dem1 + strlen(t) - 1))
+		{
+			temp[i] = t[dem2];
+			dem2++;
+			demkitu1++;
+		}
+		if (i >= (vitri+dem2))
+		{
+			temp[i] = this->str[dem1];
+			dem1++;
+		}
+	}
+	this->len = size;
+	temp[size] = '\0';
+	return temp;
+	delete[]temp;
+}
+char* MyString::erase(int soluong)
+{
+	int dem = soluong;
+	for (int i = 0; i < strlen(this->str); i++)
+	{
+		if (i < soluong)
+		{
+			this->str[i] = this->str[dem];
+			dem++;
+		}
+	}
+	this->len -= soluong;
+	this->str[this->len] = '\0';
+	return this->str;
+}
+char* MyString::clear()
+{
+	int n = this->len;
+	for (int i = 0; i < n; i++)
+	{
+		this->str[i] = '\0';
+	}
+	this->len = this->len - n;
+	return this->str;
+}
+char* MyString::substr(int vitri)
+{
+	char* x = new char[this->len - vitri];
+	int dem = 0;
+	for (int i = 0; i <this->len; i++)
+	{
+		if (i>vitri)
+		{
+			x[dem] = this->str[i];
+			dem++;
+		}
+	}
+	x[this->len - vitri - 1] = '\0';
+	this->len -= vitri;
+	return x;
+	delete[]x;
+}
+
+char* MyString::normalize()
+{
+	int dem = 0;
+	int dem1 = 0;
+	int dem2 = 0;
+	for (int i = 0; i < this->len; i++)
+	{
+		if (this->str[i] != ' ')
+		{
+			dem++;
+		}
+		else
+		{
+			dem2++;
+		}
+	}
+	char* x = new char[dem];
+	for (int i = 0; i < this->len; i++)
+	{
+		if (this->str[i] != ' ')
+		{
+			x[dem1] = this->str[i];
+			dem1++;
+		}
+	}
+	x[dem] = '\0';
+	this->len -= dem2;
+	return x;
+	delete[]x;
+}
+
+char* MyString::upper()
+{
+	return strupr(this->str);
+}
+
+char* MyString::lower()
+{
+	return strlwr(this->str);
+}
+
+char* MyString::initalLetterCase()
+{
+	for (int i = this->len; i >= 0; i--)
+	{
+		if (this->str[i] == ' ')
+		{
+			if (this->str[i + 1] >= 'a'&&this->str[i + 1] <= 'z')
+			{
+				this->str[i + 1] -= 32;
+			}
+		}
+	}
+	this->str[len] = '\0';
+	return this->str;
+}
